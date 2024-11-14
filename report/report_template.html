@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Testing Report</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+        .report-container {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        .header {
+            background-color: #007bff;
+            color: white;
+            padding: 20px;
+            text-align: left;
+        }
+        .top-sections {
+            display: flex;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .section {
+            flex: 1;
+            padding: 20px;
+        }
+        .section:first-child {
+            border-right: 1px solid #e0e0e0;
+        }
+        .table-container {
+            padding: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #e0e0e0;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f8f9fa;
+            font-weight: bold;
+        }
+        .pass {
+            color: green;
+        }
+        .fail {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <div class="report-container">
+        <div class="header">
+            <h1>Testing Report</h1>
+        </div>
+        <div class="top-sections">
+            <div class="section">
+                <h2>Chart</h2>
+                <div style="display: flex; justify-content: center">
+                    <canvas id="statusChart"></canvas>
+                  </div>
+            </div>
+            <div class="section">
+                <h2>Details</h2>
+                <p><strong>Date:</strong> {{ date }}</p>
+                <p><strong>Tester:</strong> {{ tester }}</p>
+                <p><strong>Script:</strong> {{ script }}</p>
+                <p><strong>Browser:</strong> {{ browser }}</p>
+                <p><strong>Total Assertions:</strong> {{ total }}</p>
+                <p><strong>Execution Duration:</strong> {{ execution_duration }} </p>
+
+
+            </div>
+        </div>
+        <div class="table-container">
+            <h2>Test Cases</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Test Case</th>
+                        <th>Expected</th>
+                        <th>Actual</th>
+                        <th>Remarks</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for test_case in test_cases %}
+                    <tr>
+                        <td>{{ test_case.title }}</td>
+                        <td>{{ test_case.expected }}</td>
+                        <td>{{ test_case.actual }}</td>
+                        <td>{{ test_case.remarks }}</td>
+                        <td class="{{ test_case.status | lower }}">{{ test_case.status }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Include Chart.js library -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Data for the pie chart (replace with actual counts from your test data)
+        const passCount = {{ pass_count }};
+        const failCount = {{ fail_count }};
+        
+        const ctx = document.getElementById('statusChart').getContext('2d');
+        const statusChart = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: ['Pass', 'Fail'],
+                datasets: [{
+                    data: [passCount, failCount],
+                    backgroundColor: ['#28a745', '#dc3545'],
+                    borderColor: ['#28a745', '#dc3545'],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom right',
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
